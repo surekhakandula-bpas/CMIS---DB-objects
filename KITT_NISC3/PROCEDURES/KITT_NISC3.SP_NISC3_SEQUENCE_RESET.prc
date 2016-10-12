@@ -16,7 +16,7 @@ IS
    CURSOR GetCursorsToSync IS
    SELECT pd.sequence_name, pd.last_number last_number_pd,
           qa.last_number last_number_qa, qa.cache_size
-     FROM DBA_sequences@KITT_NISC3_KITTD pd
+     FROM USER_sequences@KITT_NISC3_KITTD pd
      JOIN USER_sequences qa
        on qa.sequence_name = pd.sequence_name
     WHERE qa.last_number != pd.last_number

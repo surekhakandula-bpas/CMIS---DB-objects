@@ -31,19 +31,17 @@ IS
 
   CURSOR DISABLE_CONSTRAINTS IS
     SELECT 'alter table KITT_NISC3.'||table_name||' disable constraint '||constraint_name
-      FROM DBA_CONSTRAINTS
-     WHERE OWNER='KITT_NISC3'
-       and constraint_TYPE NOT IN ('P','U')
+      FROM USER_CONSTRAINTS
+     WHERE constraint_TYPE NOT IN ('P','U')
        and table_name not like 'BIN%'
     ORDER BY TABLE_NAME; 
   DC              VARCHAR2(1000);
---  DC DBA_CONSTRAINTS%ROWTYPE;
+--  DC USER_CONSTRAINTS%ROWTYPE;
    
   CURSOR TRUNCATE_TABLES IS
     SELECT 'TRUNCATE table KITT_NISC3.'||table_name
-      FROM DBA_TABLES@KITT_NISC3_KITTD
-     WHERE OWNER='KITT_NISC3'
-       AND TABLE_NAME NOT IN ('JOB_DETAIL','P_USER_GUIDE','KITT_LOG')
+      FROM USER_TABLES@KITT_NISC3_KITTD
+     WHERE TABLE_NAME NOT IN ('JOB_DETAIL','P_USER_GUIDE','KITT_LOG')
        and table_name not like 'BIN%'
        AND TEMPORARY = 'N'
     ORDER BY TABLE_NAME; 
@@ -51,9 +49,8 @@ IS
  
   CURSOR NOLOGGING IS
     select 'alter table KITT_NISC3.'||table_name||' nologging'
-      from dba_tables
-     where owner='KITT_NISC3'
-       AND TABLE_NAME NOT IN ('JOB_DETAIL','P_USER_GUIDE','KITT_LOG')
+      from USER_tables
+     where TABLE_NAME NOT IN ('JOB_DETAIL','P_USER_GUIDE','KITT_LOG')
        and table_name not like 'BIN%'
        AND TEMPORARY = 'N'
     ORDER BY TABLE_NAME;
@@ -61,18 +58,16 @@ IS
   
     CURSOR NOLOGGING_IDX IS
     select 'alter index KITT_NISC3.'||index_name||' nologging'
-      from dba_indexes
-     where owner='KITT_NISC3'
-       and table_name not like 'BIN%'
+      from USER_indexes
+     where table_name not like 'BIN%'
        AND INDEX_TYPE<>'LOB'
     ORDER BY INDEX_NAME;
   NLI             VARCHAR2(1000);
   
   CURSOR INDEX_UNUSABLE IS
     select 'alter index KITT_NISC3.'||index_name||' unusable' 
-      from dba_indexes
-     where owner='KITT_NISC3'
-       and table_name not like 'BIN%'
+      from USER_indexes
+     where table_name not like 'BIN%'
        and UNIQUENESS<>'UNIQUE'
        AND INDEX_TYPE<>'LOB'
     ORDER BY INDEX_NAME;
@@ -89,9 +84,8 @@ IS
  
   CURSOR TRIGGER_DISABLE IS
     select 'alter TRIGGER KITT_NISC3.'||TRIGGER_name||' DISABLE'
-      from dba_triggers
-     where owner='KITT_NISC3'
-       and table_name not like 'BIN%'
+      from USER_triggers
+     where table_name not like 'BIN%'
     ORDER BY TRIGGER_NAME;
   TD              VARCHAR2(1000);
   
@@ -99,9 +93,8 @@ IS
 --    select 'insert /*+ APPEND */ into KITT_NISC3.'||table_name||' select * from KITT_NISC3.'||table_name||'@KITT_NISC3_KITTD'
 --   select 'insert /*+ APPEND */ into KITT_NISC3.'||table_name||' select * from KITT_NISC3.'||table_name||'@KITT_NISC3_KITT_MIRROR'
    select 'insert /*+ APPEND */ into KITT_NISC3.'||table_name||' select * from KITT_NISC3.'||table_name||'@KITT_NISC3_KITTD'
-       from dba_tables@KITT_NISC3_KITTD
-     where owner='KITT_NISC3'
-       AND TABLE_NAME NOT IN ('JOB_DETAIL','P_USER_GUIDE','REPORT_FILTER_VALUES','KITT_LOG')
+       from USER_tables@KITT_NISC3_KITTD
+     where TABLE_NAME NOT IN ('JOB_DETAIL','P_USER_GUIDE','REPORT_FILTER_VALUES','KITT_LOG')
        and table_name not like 'BIN%'
        AND TEMPORARY = 'N'
     ORDER BY TABLE_NAME;
@@ -110,9 +103,8 @@ IS
 
   CURSOR INDEX_REBUILD IS
     select 'alter index KITT_NISC3.'||index_name||' REBUILD'
-      from dba_indexes
-     where owner='KITT_NISC3'
-       and table_name not like 'BIN%'
+      from USER_indexes
+     where table_name not like 'BIN%'
        and UNIQUENESS<>'UNIQUE'
        AND INDEX_TYPE<>'LOB'
     ORDER BY index_NAME;
@@ -120,9 +112,8 @@ IS
  
   CURSOR LOGGING IS
     select 'alter table KITT_NISC3.'||table_name||' logging'
-      from dba_tables
-     where owner='KITT_NISC3'
-       AND TABLE_NAME NOT IN ('JOB_DETAIL','P_USER_GUIDE','KITT_LOG')
+      from USER_tables
+     where TABLE_NAME NOT IN ('JOB_DETAIL','P_USER_GUIDE','KITT_LOG')
        and table_name not like 'BIN%'
        AND TEMPORARY = 'N'
     ORDER BY TABLE_NAME;
@@ -137,26 +128,23 @@ IS
    
     CURSOR LOGGING_IDX IS
     select 'alter index KITT_NISC3.'||index_name||' logging'
-      from dba_indexes
-     where owner='KITT_NISC3'
-       and table_name not like 'BIN%'
+      from USER_indexes
+     where table_name not like 'BIN%'
        AND INDEX_TYPE<>'LOB'
     ORDER BY INDEX_NAME;
   LOGI            VARCHAR2(1000);
   
   CURSOR ENABLE_TRIGGER IS
     select 'alter TRIGGER KITT_NISC3.'||TRIGGER_name||' ENABLE'
-      from dba_triggers
-     where owner='KITT_NISC3'
-       and table_name not like 'BIN%'
+      from USER_triggers
+     where table_name not like 'BIN%'
     ORDER BY TRIGGER_NAME;
   ET             VARCHAR2(1000);
   
   CURSOR ENABLE_CONSTRAINT IS
     SELECT 'alter table KITT_NISC3.'||table_name||' enable constraint '||constraint_name
-      FROM DBA_CONSTRAINTS
-     WHERE OWNER='KITT_NISC3'
-       and table_name not like 'BIN%'
+      FROM USER_CONSTRAINTS
+     WHERE table_name not like 'BIN%'
        and constraint_TYPE NOT IN ('P','U')
        and constraint_name <> 'SUB_TASK_SKIL__SUB_TASK__FK102'      -- ora-02298 parent key not found
     ORDER BY TABLE_NAME; 
@@ -396,4 +384,3 @@ WHEN OTHERS THEN
 END SP_NISC3_REFRESH;
 /
 
-GRANT EXECUTE ON SP_NISC3_REFRESH TO SNAMBIAR;
