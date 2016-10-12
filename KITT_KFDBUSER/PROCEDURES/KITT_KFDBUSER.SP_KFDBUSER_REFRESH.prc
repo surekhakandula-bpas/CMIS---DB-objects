@@ -29,79 +29,69 @@ IS
 
   CURSOR DISABLE_CONSTRAINTS IS
     SELECT 'alter table KITT_KFDBUSER.'||table_name||' disable constraint '||constraint_name
-      FROM DBA_CONSTRAINTS
-     WHERE OWNER='KITT_KFDBUSER'
-       and constraint_TYPE NOT IN ('P','U')
+      FROM USER_CONSTRAINTS
+     WHERE constraint_TYPE NOT IN ('P','U')
     ORDER BY TABLE_NAME; 
   DC              VARCHAR2(1000);
---  DC DBA_CONSTRAINTS%ROWTYPE;
+--  DC USER_CONSTRAINTS%ROWTYPE;
    
   CURSOR TRUNCATE_TABLES IS
     SELECT 'TRUNCATE table KITT_KFDBUSER.'||table_name
-      FROM DBA_TABLES
-     WHERE OWNER='KITT_KFDBUSER'
+      FROM USER_TABLES
     ORDER BY TABLE_NAME; 
   TT              VARCHAR2(1000);
    
   CURSOR NOLOGGING IS
     select 'alter table KITT_KFDBUSER.'||table_name||' nologging'
-      from dba_tables
-     where owner='KITT_KFDBUSER'
+      from USER_tables
     ORDER BY TABLE_NAME;
   NL              VARCHAR2(1000);
  
   CURSOR INDEX_UNUSABLE IS
     select 'alter index KITT_KFDBUSER.'||index_name||' unusable' 
-      from dba_indexes
-     where owner='KITT_KFDBUSER'
-       and UNIQUENESS<>'UNIQUE'
+      from USER_indexes
+     where UNIQUENESS<>'UNIQUE'
        AND INDEX_TYPE<>'LOB'
     ORDER BY index_NAME;
   IU              VARCHAR2(1000);
  
   CURSOR TRIGGER_DISABLE IS
     select 'alter TRIGGER KITT_KFDBUSER.'||TRIGGER_name||' DISABLE'
-      from dba_triggers
-     where owner='KITT_KFDBUSER'
+      from USER_triggers
     ORDER BY TRIGGER_NAME;
   TD              VARCHAR2(1000);
   
   CURSOR INSERT_ROWS IS
     select 'insert /*+ APPEND */ into KITT_KFDBUSER.'||table_name||' select * from KITT_KFDBUSER.'||table_name||'@KITT_KFDBUSER_KITTD'
-      from dba_tables
-     where owner='KITT_KFDBUSER'
+      from USER_tables
     ORDER BY TABLE_NAME;
 --    ORDER BY (NUM_ROWS*AVG_ROW_LEN) DESC;
   INS              VARCHAR2(1000);
 
   CURSOR INDEX_REBUILD IS
     select 'alter index KITT_KFDBUSER.'||index_name||' REBUILD'
-      from dba_indexes
-     where owner='KITT_KFDBUSER'
-       and UNIQUENESS<>'UNIQUE'
+      from USER_indexes
+     where UNIQUENESS<>'UNIQUE'
        AND INDEX_TYPE<>'LOB'
     ORDER BY index_NAME;
   IR              VARCHAR2(1000);
   
   CURSOR LOGGING IS
     select 'alter table KITT_KFDBUSER.'||table_name||' logging'
-      from dba_tables
-     where owner='KITT_KFDBUSER'
+      from USER_tables
     ORDER BY TABLE_NAME;
   LOG             VARCHAR2(1000);
   
   CURSOR ENABLE_TRIGGER IS
     select 'alter TRIGGER KITT_KFDBUSER.'||TRIGGER_name||' ENABLE'
-      from dba_triggers
-     where owner='KITT_KFDBUSER'
+      from USER_triggers
     ORDER BY TRIGGER_NAME;
   ET             VARCHAR2(1000);
   
   CURSOR ENABLE_CONSTRAINT IS
     SELECT 'alter table KITT_KFDBUSER.'||table_name||' enable constraint '||constraint_name
-      FROM DBA_CONSTRAINTS
-     WHERE OWNER='KITT_KFDBUSER'
-       and constraint_TYPE NOT IN ('P','U')
+      FROM USER_CONSTRAINTS
+     WHERE constraint_TYPE NOT IN ('P','U')
     ORDER BY TABLE_NAME; 
   EC             VARCHAR2(1000);
 
